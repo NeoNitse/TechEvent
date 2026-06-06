@@ -20,8 +20,7 @@ class EventRepository(
 
     fun getEvents(forceOffline: Boolean = false): Flow<Pair<List<Event>, Boolean>> = flow {
         if (forceOffline) {
-            // Modo offline forzado: solo lee de Room
-            eventDao.getAllFavorites().collect { entities ->
+            eventDao.getAllCachedEvents().collect { entities ->
                 emit(Pair(entities.map { it.toEvent() }, true))
             }
             return@flow
@@ -43,7 +42,7 @@ class EventRepository(
                     venue = Venue(dto.venue.name, dto.venue.address)
                 )
             }
-            // Cachea en Room
+            // Cachea sin tocar el flag isFavorite
             events.forEach { event ->
                 eventDao.insertEvent(
                     EventEntity(
@@ -53,13 +52,19 @@ class EventRepository(
                         location = event.location,
                         status = event.status,
                         bannerUrl = event.bannerUrl,
-                        description = event.description
+                        description = event.description,
+                        isFavorite = false
                     )
+                )
+                // Actualiza solo los campos de datos (NO isFavorite)
+                eventDao.updateEventData(
+                    event.id, event.title, event.date, event.location,
+                    event.status, event.bannerUrl, event.description
                 )
             }
             emit(Pair(events, false))
         } catch (e: Exception) {
-            eventDao.getAllFavorites().collect { entities ->
+            eventDao.getAllCachedEvents().collect { entities ->
                 emit(Pair(entities.map { it.toEvent() }, true))
             }
         }
@@ -71,21 +76,20 @@ class EventRepository(
 
     suspend fun toggleFavorite(event: Event, isFavorite: Boolean) {
         withContext(Dispatchers.IO) {
-            if (isFavorite) {
-                eventDao.deleteEvent(event.id)
-            } else {
-                eventDao.insertEvent(
-                    EventEntity(
-                        id = event.id,
-                        title = event.title,
-                        date = event.date,
-                        location = event.location,
-                        status = event.status,
-                        bannerUrl = event.bannerUrl,
-                        description = event.description
-                    )
+            // Asegura que el row exista antes de tocar el flag
+            eventDao.insertEvent(
+                EventEntity(
+                    id = event.id,
+                    title = event.title,
+                    date = event.date,
+                    location = event.location,
+                    status = event.status,
+                    bannerUrl = event.bannerUrl,
+                    description = event.description,
+                    isFavorite = false
                 )
-            }
+            )
+            eventDao.setFavorite(event.id, !isFavorite)
         }
     }
 

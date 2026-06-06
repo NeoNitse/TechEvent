@@ -7,7 +7,7 @@ import com.sv.techevent.data.local.entity.EventEntity
 
 @Database(
     entities = [EventEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

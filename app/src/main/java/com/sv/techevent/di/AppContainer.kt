@@ -17,7 +17,7 @@ class AppContainer(context: Context) {
         context.applicationContext,
         AppDatabase::class.java,
         "techevent_db"
-    ).build()
+    ).fallbackToDestructiveMigration(true).build()
 
     private val eventDao = database.eventDao()
     private val apiService = RetrofitInstance.api

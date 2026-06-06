@@ -11,5 +11,6 @@ data class EventEntity(
     val location: String,
     val status: String,
     val bannerUrl: String,
-    val description: String
+    val description: String,
+    val isFavorite: Boolean = false
 )
