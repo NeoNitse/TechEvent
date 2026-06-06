@@ -14,12 +14,3 @@
 **TechEvent** is a modern application designed to streamline the organization and tracking of events. Built with a robust architecture, it provides an intuitive interface for managing schedules, resources, and tasks efficiently.
 
 `ORGANIZE` · `TRACK` · `MANAGE`
-
----
-
-## 🚀 install
-
-Clone the repository and open the project in Android Studio:
-
-```bash
-git clone [https://github.com/nitse007/TechEvent.git](https://github.com/nitse007/TechEvent.git)
