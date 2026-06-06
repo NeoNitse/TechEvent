@@ -6,7 +6,6 @@
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-09090b?style=flat-square&logo=kotlin&logoColor=7F52FF)
 ![Platform](https://img.shields.io/badge/Platform-Android-09090b?style=flat-square&logo=android&logoColor=3DDC84)
-![License](https://img.shields.io/badge/License-MIT-09090b?style=flat-square&logoColor=7F52FF)
 
 </div>
 
